@@ -116,11 +116,15 @@ export function App() {
     setAuthError(null);
     try {
       const res = await loginUser(password);
-      if (res.token) {
-        // Store token for Bearer authentication to bypass Safari ITP (cross-site tracking)
+      console.log("Login Response Data:", res);
+      if (res && res.token) {
         localStorage.setItem('calories_tracker_token', res.token);
         setIsAuthenticated(true);
+        console.log("Login successful, fetching foods...");
         await fetchFoods();
+      } else {
+        console.error("Login response invalid or missing token. Full response:", res);
+        throw new Error("Invalid server response: missing token");
       }
     } catch (err) {
       setAuthError((err as Error).message || "Invalid password. Please try again.");
@@ -159,20 +163,31 @@ export function App() {
   const totalProtein = todayItems.reduce((sum, item) => sum + item.protein, 0);
 
   const calculateWeeklyData = () => {
-    const days = ["S", "M", "T", "W", "T", "F", "S"];
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const result = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
+    
+    // Find the Monday of the current week
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 (Sun) to 6 (Sat)
+    // Adjust so Monday is 0, Sunday is 6
+    const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    
+    const monday = new Date(now);
+    monday.setDate(now.getDate() + diffToMonday);
+    
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
       const iso = d.toISOString().split("T")[0];
       const dayItems = foodLog.filter((item) => item.date === iso);
       const dayCalories = dayItems.reduce((sum, item) => sum + item.calories, 0);
       const dayProtein = dayItems.reduce((sum, item) => sum + item.protein, 0);
       
       result.push({
-        day: days[d.getDay()] ?? "",
+        day: days[i],
         calories: dayCalories,
         protein: dayProtein,
+        isToday: iso === getTodayISO()
       });
     }
     return result;
@@ -276,7 +291,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-on-surface font-body pb-32">
+    <div className="min-h-screen bg-background text-on-surface font-body pb-32">
       <Header />
 
       <main className="px-6 pt-20 max-w-2xl mx-auto">
