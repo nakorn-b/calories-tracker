@@ -135,13 +135,14 @@ export function Dashboard({
         </div>
         <div className="bg-surface-container rounded-[2rem] p-6 border border-outline h-52">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={weeklyData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+            <BarChart data={weeklyData} margin={{ top: 0, right: 10, left: 10, bottom: 0 }}>
               <XAxis
                 dataKey="day"
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: 'var(--color-on-surface-variant)', fontSize: 9, fontWeight: 600 }}
                 dy={10}
+                interval={0}
               />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
               <Bar
