@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import type { FoodItem } from "../types";
-import { logMeal } from "../services/foodService";
 
 interface AddFoodProps {
   onSave: (item: Omit<FoodItem, "id">) => Promise<void>;

@@ -12,7 +12,7 @@ import { Settings } from "./components/Settings";
 import { FoodCardList } from "./components/FoodCardList";
 import { Login } from "./components/Login";
 import { GoogleGenAI } from '@google/genai';
-import { getFoodLog, deleteFood, updateFood, checkAuth, loginUser, logoutUser } from "./services/foodService";
+import { getFoodLog, deleteFood, updateFood, checkAuth, loginUser, logoutUser, logMeal } from "./services/foodService";
 import { getUser, updateUserTargets } from "./services/userService";
 import { useUserStore } from "./zustand";
 
