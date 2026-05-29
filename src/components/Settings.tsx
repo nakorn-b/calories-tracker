@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { FoodItem } from "../types";
+import { useUserStore } from "../zustand";
 
 interface SettingsProps {
   calorieGoal: number;
@@ -10,8 +11,15 @@ interface SettingsProps {
 }
 
 export function Settings({ calorieGoal, proteinGoal, foodLog, onUpdateGoals, onLogout }: SettingsProps) {
+  const user = useUserStore((state) => state.user)
   const [tempCalories, setTempCalories] = useState(calorieGoal.toString());
   const [tempProtein, setTempProtein] = useState(proteinGoal.toString());
+
+  // Sync state with props when they change
+  React.useEffect(() => {
+    setTempCalories(calorieGoal.toString());
+    setTempProtein(proteinGoal.toString());
+  }, [calorieGoal, proteinGoal]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();

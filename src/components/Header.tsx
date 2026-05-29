@@ -1,7 +1,9 @@
 import React from "react";
 import { test } from "../services/foodService"
+import { useUserStore } from "../zustand";
 
 export function Header() {
+  const user = useUserStore((state) => state.user)
   return (
     <header className="fixed top-0 left-0 w-full z-50 glass-header flex justify-between items-center px-6 py-3">
       <div className="flex items-center gap-3">
@@ -13,7 +15,7 @@ export function Header() {
             onClick={test}
           />
         </div>
-        <h1 className="text-lg font-bold text-on-surface font-headline tracking-tight">Nutrition</h1>
+        <h1 className="text-lg font-bold text-on-surface font-headline tracking-tight">Mr. {user?.username}</h1>
       </div>
     </header>
   );

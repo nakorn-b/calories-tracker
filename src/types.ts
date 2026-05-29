@@ -16,3 +16,13 @@ export interface Message {
   text: string;
   time: string;
 }
+
+export interface User {
+  id: number;
+  username: string;
+  weight: number;
+  target_calories: number;
+  target_protein: number;
+  tdee: number;
+  bmr: number;
+}

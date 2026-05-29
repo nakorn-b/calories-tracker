@@ -114,7 +114,7 @@ export const FoodCardList: React.FC<FoodCardListProps> = ({ initialFoods, onClos
                         {!isLogged && (
                           <button 
                             onClick={() => handleDelete(food.id)}
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-error hover:bg-error/5 transition-all active:scale-90"
+                            className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error/10 transition-all active:scale-90"
                             title="Remove from list"
                           >
                             <span className="material-symbols-outlined text-xl">delete</span>

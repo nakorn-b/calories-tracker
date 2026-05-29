@@ -28,7 +28,8 @@ const request = async (method: string, path: string, body?: any) => {
 
 const get = async (path: string) => await request('GET', path)
 const post = async (path: string, body: any) => await request('POST', path, body)
+const patch = async (path: string, body: any) => await request('PATCH', path, body)
 const put = async (path: string, body: any) => await request('PUT', path, body)
 const del = async (path: string) => await request('DELETE', path)
 
-export { get, post, put, del }
+export { get, post, patch, put, del }

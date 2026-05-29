@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
-import type { View, FoodItem, Message } from "./types";
+import type { View, FoodItem, Message, User } from "./types";
 import { Header } from "./components/Header";
 import { BottomNav } from "./components/BottomNav";
 import { Dashboard } from "./components/Dashboard";
 import { FoodLog } from "./components/FoodLog";
 import { AddFood } from "./components/AddFood";
 import { Coach } from "./components/Coach";
+import { TrendDashboard } from "./components/TrendDashboard";
 import { Settings } from "./components/Settings";
 import { FoodCardList } from "./components/FoodCardList";
 import { Login } from "./components/Login";
 import { GoogleGenAI } from '@google/genai';
-import { getTodayLog, deleteFood, checkAuth, loginUser, logoutUser } from "./services/foodService";
+import { getFoodLog, deleteFood, updateFood, checkAuth, loginUser, logoutUser } from "./services/foodService";
+import { getUser, updateUserTargets } from "./services/userService";
+import { useUserStore } from "./zustand";
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
@@ -67,10 +70,10 @@ export function App() {
   const [view, setView] = useState<View>("dashboard");
   const [foodLog, setFoodLog] = useState<FoodItem[]>([]);
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
-  const [calorieGoal, setCalorieGoal] = useState(2400);
-  const [proteinGoal, setProteinGoal] = useState(150);
   const [detectedFoods, setDetectedFoods] = useState<FoodItem[]>([]);
   const [showDetectionModal, setShowDetectionModal] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
+  const user = useUserStore((state) => state.user)
 
   // Check auth on mount
   useEffect(() => {
@@ -85,7 +88,7 @@ export function App() {
         const res = await checkAuth();
         if (res.authenticated) {
           setIsAuthenticated(true);
-          await fetchFoods();
+          await Promise.all([fetchFoods(), fetchUser()]);
         } else {
           localStorage.removeItem('calories_tracker_token');
         }
@@ -100,7 +103,7 @@ export function App() {
 
   const fetchFoods = async () => {
     try {
-      const data = await getTodayLog();
+      const data = await getFoodLog();
       setFoodLog(data || []);
     } catch (err) {
       console.error("Failed to fetch food log:", err);
@@ -110,6 +113,17 @@ export function App() {
       }
     }
   };
+
+  const fetchUser = async () => {
+    try {
+        const user: User = await getUser();
+        setUser(user);
+        console.log(user)
+    } catch (err) {
+      console.error("Failed to fetch user:", err)
+    }
+
+  }
 
   const handleLogin = async (password: string) => {
     setIsAuthLoading(true);
@@ -122,6 +136,7 @@ export function App() {
         setIsAuthenticated(true);
         console.log("Login successful, fetching foods...");
         await fetchFoods();
+        await fetchUser();
       } else {
         console.error("Login response invalid or missing token. Full response:", res);
         throw new Error("Invalid server response: missing token");
@@ -155,6 +170,17 @@ export function App() {
 
   if (!isAuthenticated) {
     return <Login onLogin={handleLogin} isLoading={isAuthLoading} error={authError} />;
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <span className="animate-spin material-symbols-outlined text-primary text-4xl">progress_activity</span>
+          <p className="text-on-surface-variant animate-pulse font-medium">Loading your profile...</p>
+        </div>
+      </div>
+    );
   }
 
   const todayISO = getTodayISO();
@@ -193,15 +219,15 @@ export function App() {
     return result;
   };
 
-  const handleAddFood = (newItem: Omit<FoodItem, "id" | "time" | "date">) => {
-    const item: FoodItem = {
-      ...newItem,
-      id: Math.random().toString(36).substr(2, 9),
-      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      date: getTodayISO(),
-    };
-    setFoodLog([item, ...foodLog]);
-    setView("log");
+  const handleAddFood = async (newItem: Omit<FoodItem, "id">) => {
+    try {
+      const savedItem = await logMeal(newItem);
+      setFoodLog(prev => [savedItem, ...prev]);
+      setView("log");
+    } catch (err) {
+      console.error("Failed to add food:", err);
+      alert("Failed to save food log entry.");
+    }
   };
 
   const handleDeleteFood = async (id: string) => {
@@ -211,6 +237,16 @@ export function App() {
     } catch (err) {
       console.error("Failed to delete food:", err);
       alert("Failed to delete food log entry.");
+    }
+  };
+
+  const handleUpdateFood = async (id: string, updates: Partial<FoodItem>) => {
+    try {
+      const updatedItem = await updateFood(id, updates);
+      setFoodLog(prev => prev.map(item => item.id === id ? { ...item, ...updatedItem } : item));
+    } catch (err) {
+      console.error("Failed to update food:", err);
+      alert("Failed to update food log entry.");
     }
   };
 
@@ -284,10 +320,18 @@ export function App() {
     }
   };
 
-  const handleUpdateGoals = (calories: number, protein: number) => {
-    setCalorieGoal(calories);
-    setProteinGoal(protein);
-    setView("dashboard");
+  const handleUpdateGoals = async (calories: number, protein: number) => {
+    try {
+      const updatedUser = await updateUserTargets({ 
+        target_calories: calories, 
+        target_protein: protein 
+      });
+      setUser(updatedUser);
+      setView("dashboard");
+    } catch (err) {
+      console.error("Failed to update goals:", err);
+      alert("Failed to save targets. Please try again.");
+    }
   };
 
   return (
@@ -298,20 +342,21 @@ export function App() {
         {view === "dashboard" && (
           <Dashboard
             totalCalories={totalCalories}
-            calorieGoal={calorieGoal}
+            calorieGoal={user.target_calories}
             totalProtein={totalProtein}
-            proteinGoal={proteinGoal}
+            proteinGoal={user.target_protein}
             recentMeals={todayItems.slice(0, 3)}
             weeklyData={calculateWeeklyData()}
           />
         )}
-        {view === "log" && <FoodLog foodLog={foodLog} onDelete={handleDeleteFood} />}
+        {view === "log" && <FoodLog foodLog={foodLog} onDelete={handleDeleteFood} onUpdate={handleUpdateFood} />}
+
         {view === "add" && <AddFood onSave={handleAddFood} onCancel={() => setView("dashboard")} />}
-        {view === "coach" && <Coach messages={messages} onSend={handleSendMessage} />}
+        {view === "coach" && <TrendDashboard foodLog={foodLog} />}
         {view === "settings" && (
           <Settings
-            calorieGoal={calorieGoal}
-            proteinGoal={proteinGoal}
+            calorieGoal={user.target_calories}
+            proteinGoal={user.target_protein}
             foodLog={foodLog}
             onUpdateGoals={handleUpdateGoals}
             onLogout={handleLogout}

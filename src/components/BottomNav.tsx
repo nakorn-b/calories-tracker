@@ -10,7 +10,7 @@ export function BottomNav({ activeView, setView }: BottomNavProps) {
   const items: { id: View; label: string; icon: string }[] = [
     { id: "dashboard", label: "Home", icon: "dashboard" },
     { id: "log", label: "Log", icon: "description" },
-    { id: "coach", label: "Coach", icon: "forum" },
+    { id: "coach", label: "Trends", icon: "insights" },
     { id: "settings", label: "Settings", icon: "settings" },
   ];
 

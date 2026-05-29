@@ -62,22 +62,22 @@ export function Dashboard({
       {/* Hero Stats Section */}
       <section className="mt-6 space-y-4">
         {/* Large Calorie Card */}
-        <div className="relative bg-surface-container rounded-[2rem] p-8 border border-outline overflow-hidden group">
+        <div className="relative bg-surface-container rounded-[2rem] p-6 sm:p-8 border border-outline overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-primary/10"></div>
           
           <div className="relative z-10 flex justify-between items-end">
             <div className="space-y-1">
-              <p className="font-label text-on-surface-variant text-[11px] uppercase tracking-[0.2em] font-bold">Energy Consumed</p>
+              <p className="font-label text-on-surface-variant text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-bold">Energy Consumed</p>
               <div className="flex items-baseline gap-2">
-                <h2 className="font-headline text-5xl font-black text-on-surface tracking-tighter">
+                <h2 className="font-headline text-4xl sm:text-5xl font-black text-on-surface tracking-tighter">
                   {totalCalories.toLocaleString()}
                 </h2>
                 <span className="text-sm text-on-surface-variant font-bold">kcal</span>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider mb-1">Daily Goal</p>
-              <p className="font-headline text-lg font-bold text-on-surface">{calorieGoal}</p>
+              <p className="text-[9px] sm:text-[10px] text-on-surface-variant font-bold uppercase tracking-wider mb-1">Daily Goal</p>
+              <p className="font-headline text-base sm:text-lg font-bold text-on-surface">{calorieGoal}</p>
             </div>
           </div>
 
@@ -133,14 +133,14 @@ export function Dashboard({
             </div>
           </div>
         </div>
-        <div className="bg-surface-container rounded-[2rem] p-6 border border-outline h-52">
+        <div className="bg-surface-container rounded-[2rem] p-4 sm:p-6 border border-outline h-48 sm:h-52">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={weeklyData} margin={{ top: 0, right: 10, left: 10, bottom: 0 }}>
+            <BarChart data={weeklyData} margin={{ top: 0, right: 5, left: 5, bottom: 0 }}>
               <XAxis
                 dataKey="day"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: 'var(--color-on-surface-variant)', fontSize: 9, fontWeight: 600 }}
+                tick={{ fill: 'var(--color-on-surface-variant)', fontSize: 8, fontWeight: 600 }}
                 dy={10}
                 interval={0}
               />
