@@ -1,7 +1,7 @@
 # Foodlog Page Overrides
 
 > **PROJECT:** Calories Tracker
-> **Generated:** 2026-05-29 18:53:36
+> **Generated:** 2026-05-29 21:46:58
 > **Page Type:** Dashboard / Data View
 
 > ⚠️ **IMPORTANT:** Rules in this file **override** the Master file (`design-system/MASTER.md`).
@@ -13,13 +13,13 @@
 
 ### Layout Overrides
 
-- **Max Width:** 1200px (standard)
-- **Layout:** Full-width sections, centered content
-- **Sections:** 1. Hero with device mockup, 2. Screenshots carousel, 3. Features with icons, 4. Reviews/ratings, 5. Download CTAs
+- **Max Width:** 1400px or full-width
+- **Grid:** 12-column grid for data flexibility
+- **Sections:** 1. Hero (Search focused), 2. Categories, 3. Featured Listings, 4. Trust/Safety, 5. CTA (Become a host/seller)
 
 ### Spacing Overrides
 
-- No overrides — use Master spacing
+- **Content Density:** High — optimize for information display
 
 ### Typography Overrides
 
@@ -27,7 +27,7 @@
 
 ### Color Overrides
 
-- **Strategy:** Dark/light matching app store feel. Star ratings in gold. Screenshots with device frames.
+- **Strategy:** Search: High contrast. Categories: Visual icons. Trust: Blue/Green.
 
 ### Component Overrides
 
@@ -45,8 +45,8 @@
 
 ## Recommendations
 
-- Effects: Small hover (50-100ms), loading spinners, success/error state anim, gesture-triggered (swipe/pinch), haptic
+- Effects: Hover scale (1.02), soft shadow expansion, smooth layout shifts, content reveal
 - Forms: Use inputmode attribute
 - Responsive: Start with mobile styles then add breakpoints
 - Touch: Disable where not needed
-- CTA Placement: Download buttons prominent (App Store + Play Store) throughout
+- CTA Placement: Hero Search Bar + Navbar 'List your item'

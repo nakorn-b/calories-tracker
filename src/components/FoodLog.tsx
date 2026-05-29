@@ -100,45 +100,45 @@ export function FoodLog({ foodLog, onDelete, onUpdate }: FoodLogProps) {
             <section key={date} className="relative space-y-6">
               {/* Date Card Header */}
               <div className="bg-surface-container rounded-[2.5rem] p-6 sm:p-8 border border-outline shadow-sm">
-                <div className="flex justify-between items-start mb-6 gap-4">
-                  <div>
-                    <h2 className="font-headline text-2xl sm:text-3xl font-black text-on-surface tracking-tighter leading-tight">
+                <div className="flex justify-between items-center mb-6 gap-2">
+                  <div className="min-w-0">
+                    <h2 className="font-headline text-2xl sm:text-3xl font-black text-on-surface tracking-tighter leading-tight truncate">
                       {formatDisplayDate(date)}
                     </h2>
-                    <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-[0.2em] mt-2">
+                    <p className="text-[9px] sm:text-[10px] text-on-surface-variant font-black uppercase tracking-[0.2em] mt-1 sm:mt-2">
                       {date === new Date().toISOString().split("T")[0] ? "Current Day" : "Log History"}
                     </p>
                   </div>
-                  <div className="bg-background/50 rounded-2xl px-3 py-1.5 border border-outline flex-shrink-0 shadow-inner flex items-center justify-center">
-                    <span className="text-[9px] sm:text-[10px] font-black text-primary uppercase tracking-widest whitespace-nowrap leading-none">
+                  <div className="bg-background/50 rounded-2xl px-3 py-1.5 border border-outline flex-shrink-0 shadow-inner">
+                    <span className="text-[10px] font-black text-primary uppercase tracking-widest whitespace-nowrap leading-none">
                       {items.length} {items.length === 1 ? 'Entry' : 'Entries'}
                     </span>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                   <div className="flex-1 bg-background/40 rounded-3xl p-4 border border-outline flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
-                      <span className="material-symbols-outlined text-sm text-primary">local_fire_department</span>
+                    <div className="w-10 h-10 rounded-2xl bg-primary/10 flex-shrink-0 flex items-center justify-center border border-primary/20">
+                      <span className="material-symbols-outlined text-lg text-primary">local_fire_department</span>
                     </div>
                     <div>
-                      <span className="block text-[9px] text-on-surface-variant font-black uppercase tracking-widest leading-none mb-1">Energy</span>
+                      <span className="block text-[9px] text-on-surface-variant font-black uppercase tracking-[0.1em] mb-0.5">Energy</span>
                       <div className="flex items-baseline gap-1">
-                        <span className="font-headline font-bold text-lg text-on-surface">{dailyCalories}</span>
-                        <span className="text-[10px] text-on-surface-variant">kcal</span>
+                        <span className="font-headline font-bold text-xl text-on-surface leading-none">{dailyCalories}</span>
+                        <span className="text-[10px] text-on-surface-variant font-bold uppercase">kcal</span>
                       </div>
                     </div>
                   </div>
                   
                   <div className="flex-1 bg-background/40 rounded-3xl p-4 border border-outline flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-secondary/10 flex items-center justify-center border border-secondary/20">
-                      <span className="material-symbols-outlined text-sm text-secondary">fitness_center</span>
+                    <div className="w-10 h-10 rounded-2xl bg-secondary/10 flex-shrink-0 flex items-center justify-center border border-secondary/20">
+                      <span className="material-symbols-outlined text-lg text-secondary">fitness_center</span>
                     </div>
                     <div>
-                      <span className="block text-[9px] text-on-surface-variant font-black uppercase tracking-widest leading-none mb-1">Protein</span>
+                      <span className="block text-[9px] text-on-surface-variant font-black uppercase tracking-[0.1em] mb-0.5">Protein</span>
                       <div className="flex items-baseline gap-1">
-                        <span className="font-headline font-bold text-lg text-on-surface">{dailyProtein}</span>
-                        <span className="text-[10px] text-on-surface-variant">g</span>
+                        <span className="font-headline font-bold text-xl text-on-surface leading-none">{dailyProtein}</span>
+                        <span className="text-[10px] text-on-surface-variant font-bold uppercase">g</span>
                       </div>
                     </div>
                   </div>
@@ -219,10 +219,10 @@ export function FoodLog({ foodLog, onDelete, onUpdate }: FoodLogProps) {
                   return (
                     <div
                       key={item.id}
-                      className="group bg-surface-container-low rounded-[2rem] p-5 flex items-center justify-between hover:bg-surface-container transition-all duration-300 border border-outline hover:border-primary/30"
+                      className="group bg-surface-container-low rounded-[2rem] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-surface-container transition-all duration-300 border border-outline hover:border-primary/30 gap-4"
                     >
-                      <div className="flex items-center gap-5 flex-1">
-                        <div className="w-12 h-12 rounded-2xl bg-background flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors border border-outline">
+                      <div className="flex items-center gap-4 sm:gap-5 flex-1">
+                        <div className="w-12 h-12 rounded-2xl bg-background flex-shrink-0 flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors border border-outline">
                           <span className="material-symbols-outlined">
                             {item.category === "Breakfast" ? "wb_twilight" : 
                              item.category === "Lunch" ? "wb_sunny" : 
@@ -230,44 +230,46 @@ export function FoodLog({ foodLog, onDelete, onUpdate }: FoodLogProps) {
                           </span>
                         </div>
                         
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-primary">
+                        <div className="flex flex-col min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
+                            <span className="text-[9px] font-black uppercase tracking-widest text-primary whitespace-nowrap">
                               {item.time}
                             </span>
-                            <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
-                            <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest">
+                            <span className="w-0.5 h-0.5 rounded-full bg-outline-variant"></span>
+                            <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest truncate">
                               {item.category}
                             </span>
                           </div>
-                          <h3 className="font-headline font-bold text-base text-on-surface">
+                          <h3 className="font-headline font-bold text-base sm:text-lg text-on-surface truncate leading-tight">
                             {item.name}
                           </h3>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <div className="flex items-baseline gap-1 justify-end">
-                            <span className="font-headline font-black text-lg text-on-surface">{item.calories}</span>
-                            <span className="text-[10px] text-on-surface-variant font-bold">kcal</span>
+                      <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-outline/10">
+                        <div className="flex items-center gap-4">
+                          <div className="text-left sm:text-right">
+                            <div className="flex items-baseline gap-1 justify-start sm:justify-end">
+                              <span className="font-headline font-black text-lg text-on-surface">{item.calories}</span>
+                              <span className="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">kcal</span>
+                            </div>
+                            <p className="text-[10px] font-black text-secondary uppercase tracking-widest leading-none">
+                              {item.protein}g protein
+                            </p>
                           </div>
-                          <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">
-                            {item.protein}g protein
-                          </p>
                         </div>
                         
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={() => startEditing(item)}
-                            className="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all active:scale-90"
+                            className="w-10 h-10 rounded-xl bg-background sm:bg-transparent flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-all active:scale-90 border border-outline sm:border-none"
                             title="Edit entry"
                           >
                             <span className="material-symbols-outlined text-lg">edit</span>
                           </button>
                           <button
                             onClick={() => setItemToDelete(item)}
-                            className="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error/10 transition-all active:scale-90"
+                            className="w-10 h-10 rounded-xl bg-background sm:bg-transparent flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error/10 transition-all active:scale-90 border border-outline sm:border-none"
                             title="Delete entry"
                           >
                             <span className="material-symbols-outlined text-lg">close</span>
