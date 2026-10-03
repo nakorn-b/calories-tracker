@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import type { Message } from "../types";
-import { GoogleGenAI } from '@google/genai';
 
 interface CoachProps {
   messages: Message[];

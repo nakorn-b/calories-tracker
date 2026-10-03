@@ -19,7 +19,7 @@ const request = async (method: string, path: string, body?: any) => {
   
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.detail || `API error: ${res.status}`);
+    throw new Error(typeof errorData.detail === 'string' ? errorData.detail : `API error: ${res.status}`);
   }
   
   return res.json()

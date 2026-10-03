@@ -20,13 +20,19 @@ import { useUserStore } from "./zustand";
 
 const getTodayISO = () => new Date().toISOString().split("T")[0];
 
-const fileToBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve((reader.result as string).split(",")[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+const MAX_PHOTO_DIMENSION = 1280;
+
+/** Downscales a photo to a JPEG and returns its base64 data, keeping uploads under the API's request size limit. */
+const fileToBase64 = async (file: File): Promise<string> => {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, MAX_PHOTO_DIMENSION / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  return canvas.toDataURL("image/jpeg", 0.85).split(",")[1]!;
+};
 
 const INITIAL_MESSAGES: Message[] = [
   {
@@ -304,7 +310,7 @@ export function App() {
     setIsAnalyzingPhoto(true);
     try {
       const base64Data = await fileToBase64(file);
-      const responseText = await getAIResponseFromImage(base64Data, file.type);
+      const responseText = await getAIResponseFromImage(base64Data, "image/jpeg");
       const foodItems = responseText ? parseFoodItemsFromAIResponse(responseText) : null;
 
       if (!foodItems || foodItems.length === 0) {
